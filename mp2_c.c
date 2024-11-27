@@ -78,7 +78,7 @@ int main() {
 			printInt(intPixels, width, height);
 		}
 
-		printf("\n%dx%d: \n", width, height);
+		printf("\n---------- %dx%d ----------\n", width, height);
 
 		// loop for timing the function call
 		for (int i = 0; i < 30; i++) {

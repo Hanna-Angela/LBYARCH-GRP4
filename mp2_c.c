@@ -3,6 +3,7 @@
 #include <time.h>
 #include <math.h>
 
+// declares an external function
 extern void imgCvtGrayInttoFloat(int* intPixels, float* floatPixels, int width, int height);
 
 // displays the first 10 integer pixel inputs
@@ -30,9 +31,9 @@ void randomPixels(int* pixels, int width, int height) {
 	}
 }
 
+// converting int pixels to float pixels
 void solveExpectedValue(int* intPixels, int width, int height, float* expectedPixels) {
 	float temp = (float)1.0f / 255.0f;
-	//expectedPixels = (float*)malloc(width * height * sizeof(float));
 	float expectedValue = 0;
 
 	for (int i = 0; i < height; i++) {

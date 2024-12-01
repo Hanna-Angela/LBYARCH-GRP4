@@ -1,6 +1,6 @@
 section .data
-var1 dq 1.0    
-var2 dq 255.0 
+var1 dd 1.0    
+var2 dd 255.0 
 
 section .text
 bits 64
@@ -19,13 +19,12 @@ imgCvtGrayInttoFloat:
     
     mov r10, r9
     
-    mul r10, r8 
+    imul r10, r8 
     xor rax, rax	
 
-    movsd xmm1, [var1]      
-    movsd xmm2, [var2]        
-    divsd xmm1, xmm2  
-    cvtsd2ss xmm4, xmm1
+    movss xmm1, [var1]      
+    movss xmm2, [var2]        
+    vdivss xmm4, xmm1, xmm2  
 
 convert:
     cvtsi2ss xmm0, [rcx] 

@@ -11,9 +11,9 @@ Shanette Presas
 
 Average execution time for 10x10 image: 0.00000 ms
 
-Average execution time for 100x100 image: 0.00000 ms
+Average execution time for 100x100 image: 0.03333 ms
 
-Average execution time for 1000x1000 image: 0.33333 ms
+Average execution time for 1000x1000 image: 0.40000 ms
 
 
 ### Analysis:
@@ -23,7 +23,8 @@ Based on the average execution time observed across the three test cases, it is 
 
 ### Screenshots of program output:
 
-![image](https://github.com/user-attachments/assets/ffd4b528-fbc2-4884-ac10-a8adaa8e71ac)
+![image](https://github.com/user-attachments/assets/0a96be47-0dc0-4936-99d8-d989bdc5133a)
+
 
 
 ### Video:

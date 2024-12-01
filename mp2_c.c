@@ -3,7 +3,6 @@
 #include <time.h>
 #include <math.h>
 
-
 extern void imgCvtGrayInttoFloat(int* intPixels, float* floatPixels, int width, int height);
 
 // displays the first 10 integer pixel inputs
@@ -31,16 +30,36 @@ void randomPixels(int* pixels, int width, int height) {
 	}
 }
 
+void solveExpectedValue(int* intPixels, int width, int height, float* expectedPixels) {
+	float temp = (float)1.0f / 255.0f;
+	//expectedPixels = (float*)malloc(width * height * sizeof(float));
+	float expectedValue = 0;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			expectedValue = intPixels[i * width + j] * temp;
+			expectedPixels[i * width + j] = expectedValue;
+		}
+	}
+}
+
 // validates that all float pixel values are equal to 0.33
-int validateFloatPixels(float* pixels, int width, int height) {
-	float expectedValue = 0.33;
+int validateFloatPixels(int* intPixels, float* pixels, int width, int height, float* expectedPixels) {
+
+	float expectedValue = 0, actualValue = 0, roundedActual = 0, roundedExpected = 0;
+
+	solveExpectedValue(intPixels, width, height, expectedPixels);
+
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 
+			//calculating the expected value
+			expectedValue = expectedPixels[i * width + j];
+
 			// round the floating point values to 2 decimal places
-			float actualValue = pixels[i * width + j];
-			float roundedActual = round(actualValue * 100) / 100;
-			float roundedExpected = round(expectedValue * 100) / 100;
+			actualValue = pixels[i * width + j];
+			roundedActual = (float)(round(actualValue * 100) / 100);
+			roundedExpected = (float)(round(expectedValue * 100) / 100);
 
 			// compare
 			if (roundedActual != roundedExpected) {
@@ -48,7 +67,6 @@ int validateFloatPixels(float* pixels, int width, int height) {
 			}
 		}
 	}
-	
 	return 1; // validation passed
 }
 
@@ -56,6 +74,10 @@ int main() {
 	int height = 0, width = 0, isValid = 0;
 	clock_t start, end;
 	double time_taken = 0, avg_time_taken = 0;
+
+	int* intPixels;
+	float* floatPixels;
+	float* expectedPixels;
 
 	int image_sizes[3][2] = { {10, 10}, {100, 100}, {1000, 1000} };
 
@@ -66,8 +88,9 @@ int main() {
 		height = image_sizes[i][1];
 
 		// initialize the arrays
-		int* intPixels = (int*)malloc(width * height * sizeof(int));
-		float* floatPixels = (float*)malloc(width * height * sizeof(float));
+		intPixels = (int*)malloc(width * height * sizeof(int));
+		floatPixels = (float*)malloc(width * height * sizeof(float));
+		expectedPixels = (float*)malloc(width * height * sizeof(float));
 
 		// fill intPixels with values
 		randomPixels(intPixels, width, height);
@@ -86,39 +109,35 @@ int main() {
 			imgCvtGrayInttoFloat(intPixels, floatPixels, width, height);
 			end = clock();
 
-			
-
 			//validity check
-			isValid = validateFloatPixels(floatPixels, width, height);
-			if (isValid == 0) {
-				printf("Validation failed.\n");
-			}
-			else{
-				// print float pixel values
-				if (i == 0)
-				{
-					printf("\nFirst 10 float pixel values:\n");
-					printFloat(floatPixels, width, height);
-					printf("\n");
-				}
+			isValid = validateFloatPixels(intPixels, floatPixels, width, height, expectedPixels);
 
-				time_taken = ((double)(end - start)) * 1000 / CLOCKS_PER_SEC;
-				printf("time_taken [%d]: %.5lf ms\n", i+1, time_taken);
-				avg_time_taken += time_taken;
+			if (i == 0) {
+				printf("\n[x86-64] First 10 float pixel values:\n");
+				printFloat(floatPixels, width, height);
+
+				printf("\nFor correctness check:");
+				printf("\n[C] First 10 float pixel values:\n");
+				printFloat(expectedPixels, width, height);
+				printf("\n");
 			}
-			
+
+			if (isValid == 0) {
+				printf("Incorrect output [%d].\n", i+1);
+			}
+
+			time_taken = ((double)(end - start)) * 1000 / CLOCKS_PER_SEC;
+			avg_time_taken += time_taken;
 		}
 
 		// get average execution time
 		avg_time_taken /= 30;
-		printf("\nAverage execution time for %dx%d image: %.5lf ms\n", width, height, avg_time_taken);
-
-		
+		printf("Average execution time for %dx%d image: %.5lf ms\n", width, height, avg_time_taken);
 
 		//free the allocated memory
 		free(intPixels);
 		free(floatPixels);
 	}
-	
+
 	return 0;
 }

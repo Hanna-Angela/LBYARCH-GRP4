@@ -19,7 +19,7 @@ imgCvtGrayInttoFloat:
     
     mov r10, r9
     
-    imul r10, r8 
+    mul r10, r8 
     xor rax, rax	
 
     movsd xmm1, [var1]      

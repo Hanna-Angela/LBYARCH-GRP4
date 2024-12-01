@@ -1,5 +1,12 @@
 # LBYARCH-GRP4
 
+### Members:
+
+Hanna De Los Santos
+
+Shanette Presas
+
+
 ### Execution Time:
 
 Average execution time for 10x10 image: 0.00000 ms
